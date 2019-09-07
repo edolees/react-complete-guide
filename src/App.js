@@ -4,6 +4,7 @@ import './App.css';
 import Person from './Person/Person';
 
 const App = props => {
+
   // Creating Persons State
  const [personsState, setPersonsState]= useState({
     persons:[
@@ -11,7 +12,8 @@ const App = props => {
       {name: 'Ed' , age :24 },
     ],
   });
-
+  
+  const [showPersonState,showPersonSetState] = useState(false)
  // Handling Event for Click / Updating Persons State 
   const onClickHandler = () => {
     setPersonsState({
@@ -21,6 +23,7 @@ const App = props => {
       ]
     })
   }
+  // Creating Event Handler
   const nameChangeHandler = event => {
     setPersonsState({
       persons:[
@@ -30,6 +33,10 @@ const App = props => {
     })
   }
 
+ const togglePersonHandler = () =>{
+    showPersonSetState(!showPersonState)
+ }
+
   const style ={
     backgroundColor: 'white',
     font:'inherit',
@@ -37,23 +44,30 @@ const App = props => {
     padding: '8px',
     cursor: 'pointer'
   }
+  console.log(showPersonState);
    return (
-      <div className='App'>
-        <h1>Hey</h1>
-        <button
-         style={style}
-         onClick={onClickHandler
-         }>Switch Name</button>
+    <div className='App'>
+      <button
+        style={style}
+        onClick={togglePersonHandler}>
+          Toggle Person
+          </button>      
+      { showPersonState?
+      <div>
         <Person
-         name={personsState.persons[0].name} 
-         age = {personsState.persons[0].age} 
-         >Suerte</Person>
-        <Person 
-          name={personsState.persons[1].name} 
-          age = {personsState.persons[1].age}
-          changed={nameChangeHandler}/>
-      </div>
-    )
-}
-export default App;
+          name={personsState.persons[0].name}
+          age={personsState.persons[0].age}
+        />
 
+        <Person
+          name={personsState.persons[1].name}
+          age={personsState.persons[1].age}
+          changed={nameChangeHandler} />
+      </div> :null
+      }
+    </div>
+  );
+        
+}
+
+export default App;
