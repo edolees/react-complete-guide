@@ -8,35 +8,47 @@ const App = props => {
   // Creating Persons State
  const [personsState, setPersonsState]= useState({
     persons:[
-      {name: 'Eduardo' , age: 23 },
-      {name: 'Ed' , age :24 },
+      {id:'1iuashd' , name: 'Eduardo' , age: 23 },
+      {id:'12lnmk1n' , name: 'Ed' , age :24 },
     ],
   });
-  
+  // Creating Show Person 
   const [showPersonState,showPersonSetState] = useState(false)
- // Handling Event for Click / Updating Persons State 
-  const onClickHandler = () => {
-    setPersonsState({
-      persons:[
-        {name:'Eduardsado', age:23},
-        {name:'Edasdasd', age :24},
-      ]
-    })
-  }
-  // Creating Event Handler
-  const nameChangeHandler = event => {
-    setPersonsState({
-      persons:[
-        {name: 'Eduardo' , age: 23 },
-        {name: event.target.value , age :25 },
-      ]
-    })
+
+  // Event handler to update the name for the input
+  const nameChangeHandler = (event , id) => {
+
+    // fetching the targeted person with the ID
+    const personIndex = personsState.persons.findIndex(p =>{
+      return p.id === id
+    });
+    //Using the spread operator to spread the object that was fetched into an object
+    const person ={...personsState.persons[personIndex]}
+    //Setting the fetched object's name to the input value
+    person.name = event.target.value;
+    //Using the spread operator  to spread the personsState Array
+    const persons = [...personsState.persons];
+    persons[personIndex] = person;
+
+    setPersonsState({persons: persons })
   }
 
+
+ const deletePersonHandler = (personIndex) =>{
+   console.log(personIndex);
+   
+   const persons = [...personsState.persons];
+   persons.splice(personIndex , 1);
+  setPersonsState({persons: persons})
+
+ } 
  const togglePersonHandler = () =>{
     showPersonSetState(!showPersonState)
+    console.log(personsState.persons);
+    
  }
 
+ 
   const style ={
     backgroundColor: 'white',
     font:'inherit',
@@ -44,27 +56,30 @@ const App = props => {
     padding: '8px',
     cursor: 'pointer'
   }
-  console.log(showPersonState);
    return (
     <div className='App'>
       <button
         style={style}
         onClick={togglePersonHandler}>
           Toggle Person
-          </button>      
-      { showPersonState?
+      </button>
       <div>
-        <Person
-          name={personsState.persons[0].name}
-          age={personsState.persons[0].age}
-        />
 
-        <Person
-          name={personsState.persons[1].name}
-          age={personsState.persons[1].age}
-          changed={nameChangeHandler} />
-      </div> :null
-      }
+      { showPersonState?
+      personsState.persons.map((profile , index) =>{
+        console.log(profile);
+        
+        return <Person 
+        click = {() => deletePersonHandler(index)}
+        name = {profile.name}
+        age = {profile.age}
+        key = {profile.id}
+        change = {(event) => nameChangeHandler(event, profile.id)}
+        />
+      })
+      :null
+    }
+      </div>
     </div>
   );
         
