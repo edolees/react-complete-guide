@@ -1,88 +1,93 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 //import logo from './logo.svg';
 import './App.css';
 import Person from './Person/Person';
 
 const App = props => {
 
-  // Creating Persons State
- const [personsState, setPersonsState]= useState({
-    persons:[
-      {id:'1iuashd' , name: 'Eduardo' , age: 23 },
-      {id:'12lnmk1n' , name: 'Ed' , age :24 },
+  const [personsState, setPersonsState] = useState({ // Creating Persons State
+    persons: [
+      { id: '1iuashd', name: 'Eduardo', age: 23 },
+      { id: '12lnmk1n', name: 'Ed', age: 24 },
     ],
   });
-  // Creating Show Person 
-  const [showPersonState,showPersonSetState] = useState(false)
 
-  // Event handler to update the name for the input
-  const nameChangeHandler = (event , id) => {
+  const [showPersonState, showPersonSetState] = useState(false); // Creating Show Person State
 
-    // fetching the targeted person with the ID
-    const personIndex = personsState.persons.findIndex(p =>{
+  const nameChangeHandler = (event, id) => { // Event handler to update the name for the input
+
+    const personIndex = personsState.persons.findIndex(p => { // fetching the targeted person with the ID
       return p.id === id
     });
-    //Using the spread operator to spread the object that was fetched into an object
-    const person ={...personsState.persons[personIndex]}
-    //Setting the fetched object's name to the input value
-    person.name = event.target.value;
-    //Using the spread operator  to spread the personsState Array
-    const persons = [...personsState.persons];
+
+    const person = { ...personsState.persons[personIndex] } //Using the spread operator to spread the object that was fetched into an object
+
+    person.name = event.target.value; //Setting the fetched object's name to the input value
+
+    const persons = [...personsState.persons]; //Using the spread operator  to spread the personsState Array
     persons[personIndex] = person;
 
-    setPersonsState({persons: persons })
+    setPersonsState({ persons: persons });
   }
 
+  const deletePersonHandler = (personIndex) => { //Removing selected person from Array
+    const persons = [...personsState.persons];
+    persons.splice(personIndex, 1);
+    setPersonsState({ persons: persons });
+  }
 
- const deletePersonHandler = (personIndex) =>{
-   console.log(personIndex);
-   
-   const persons = [...personsState.persons];
-   persons.splice(personIndex , 1);
-  setPersonsState({persons: persons})
+  const togglePersonHandler = () => { //Toggling Person Component
+    showPersonSetState(!showPersonState);
+  }
 
- } 
- const togglePersonHandler = () =>{
-    showPersonSetState(!showPersonState)
-    console.log(personsState.persons);
-    
- }
-
- 
-  const style ={
-    backgroundColor: 'white',
-    font:'inherit',
-    border: '1px solid blue',
+  const style = {
+    backgroundColor: 'teal',
+    color: 'white',
+    font: 'inherit',
+    border: '1px solid black',
     padding: '8px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+  };
+
+  let classes = [];
+  if (personsState.persons.length <= 2) {
+    classes.push('red');
   }
-   return (
-    <div className='App'>
-      <button
-        style={style}
-        onClick={togglePersonHandler}>
+  if (personsState.persons.length <= 1) {
+    classes.push('bold');
+  }
+
+  let persons = null;
+  if (showPersonState) {
+
+    persons = (
+
+      personsState.persons.map((profile, index) => {
+        return <Person
+          click={() => deletePersonHandler(index)}
+          name={profile.name}
+          age={profile.age}
+          key={profile.id}
+          change={(event) => nameChangeHandler(event, profile.id)}
+        />
+      }));
+    style.backgroundColor = 'red';
+  };
+
+  return (
+      <div className='App'>
+        <button
+          style={style}
+          onClick={togglePersonHandler}>
           Toggle Person
       </button>
-      <div>
-
-      { showPersonState?
-      personsState.persons.map((profile , index) =>{
-        console.log(profile);
-        
-        return <Person 
-        click = {() => deletePersonHandler(index)}
-        name = {profile.name}
-        age = {profile.age}
-        key = {profile.id}
-        change = {(event) => nameChangeHandler(event, profile.id)}
-        />
-      })
-      :null
-    }
-      </div>
-    </div>
+        <p className={classes.join(' ')}>Hey , This is working!</p>
+        <div>
+          {persons}
+        </div>
+      </div> 
   );
-        
+
 }
 
 export default App;
