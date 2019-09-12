@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 //import logo from './logo.svg';
-import './App.css';
+//import './App.css'; 
+import styles from './App.module.css';
 import Person from './Person/Person';
 
 const App = props => {
@@ -40,24 +41,16 @@ const App = props => {
     showPersonSetState(!showPersonState);
   }
 
-  const style = {
-    backgroundColor: 'teal',
-    color: 'white',
-    font: 'inherit',
-    border: '1px solid black',
-    padding: '8px',
-    cursor: 'pointer',
-  };
-
-  let classes = [];
+  let assignedClasses = [];
   if (personsState.persons.length <= 2) {
-    classes.push('red');
+    assignedClasses.push(styles.red);
   }
   if (personsState.persons.length <= 1) {
-    classes.push('bold');
+    assignedClasses.push(styles.bold);
   }
 
   let persons = null;
+  let btnClass = '';
   if (showPersonState) {
 
     persons = (
@@ -71,21 +64,21 @@ const App = props => {
           change={(event) => nameChangeHandler(event, profile.id)}
         />
       }));
-    style.backgroundColor = 'red';
+    btnClass = styles.Red;
   };
 
   return (
-      <div className='App'>
-        <button
-          style={style}
-          onClick={togglePersonHandler}>
-          Toggle Person
+    <div className={styles.App}>
+      <button
+        className={btnClass}
+        onClick={togglePersonHandler}>
+        Toggle Person
       </button>
-        <p className={classes.join(' ')}>Hey , This is working!</p>
-        <div>
-          {persons}
-        </div>
-      </div> 
+      <p className={assignedClasses.join(' ')}>Hey , This is working!</p>
+      <div>
+        {persons}
+      </div>
+    </div>
   );
 
 }
