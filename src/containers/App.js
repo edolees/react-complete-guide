@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-//import logo from './logo.svg';
-//import './App.css'; 
 import styles from './App.module.css';
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/withClass';
+import Aux from '../hoc/Aux'
 
 const App = props => {
 
@@ -29,6 +30,7 @@ const App = props => {
     persons[personIndex] = person;
 
     setPersonsState({ persons: persons });
+
   }
 
   const deletePersonHandler = (personIndex) => { //Removing selected person from Array
@@ -41,46 +43,32 @@ const App = props => {
     showPersonSetState(!showPersonState);
   }
 
-  let assignedClasses = [];
-  if (personsState.persons.length <= 2) {
-    assignedClasses.push(styles.red);
-  }
-  if (personsState.persons.length <= 1) {
-    assignedClasses.push(styles.bold);
-  }
+
 
   let persons = null;
-  let btnClass = '';
+
   if (showPersonState) {
 
-    persons = (
-
-      personsState.persons.map((profile, index) => {
-        return <Person
-          click={() => deletePersonHandler(index)}
-          name={profile.name}
-          age={profile.age}
-          key={profile.id}
-          change={(event) => nameChangeHandler(event, profile.id)}
-        />
-      }));
-    btnClass = styles.Red;
+    persons = <Persons
+      persons={personsState.persons}
+      clicked={deletePersonHandler}
+      changed={nameChangeHandler} />
   };
 
   return (
-    <div className={styles.App}>
-      <button
-        className={btnClass}
-        onClick={togglePersonHandler}>
-        Toggle Person
-      </button>
-      <p className={assignedClasses.join(' ')}>Hey , This is working!</p>
+    <Aux>
       <div>
+        <Cockpit
+          title={props.appTitle}
+          show={showPersonState}
+          persons={personsState.persons}
+          toggle={togglePersonHandler} />
         {persons}
       </div>
-    </div>
+    </Aux>
+
   );
 
 }
 
-export default App;
+export default withClass(App,styles.App);
