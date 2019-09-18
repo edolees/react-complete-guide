@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+
 import styles from './App.module.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import withClass from '../hoc/withClass';
-import Aux from '../hoc/Aux'
+import Aux from '../hoc/Aux';
+import AuthContext from '../context/auth-context';
+
 
 const App = props => {
 
@@ -15,6 +18,8 @@ const App = props => {
   });
 
   const [showPersonState, showPersonSetState] = useState(false); // Creating Show Person State
+
+  const [authenticatedState, authenticatedSetState] = useState(false)
 
   const nameChangeHandler = (event, id) => { // Event handler to update the name for the input
 
@@ -43,6 +48,9 @@ const App = props => {
     showPersonSetState(!showPersonState);
   }
 
+  const loginHandler = () => {
+    authenticatedSetState(true)
+  }
 
 
   let persons = null;
@@ -52,23 +60,25 @@ const App = props => {
     persons = <Persons
       persons={personsState.persons}
       clicked={deletePersonHandler}
-      changed={nameChangeHandler} />
+      changed={nameChangeHandler}
+      isAuthenticated={authenticatedState} />
   };
 
   return (
     <Aux>
-      <div>
+      <AuthContext.Provider value ={{authenticated: authenticatedState , login : loginHandler}}>
         <Cockpit
           title={props.appTitle}
           show={showPersonState}
           persons={personsState.persons}
-          toggle={togglePersonHandler} />
+          toggle={togglePersonHandler}
+          login={loginHandler} />
         {persons}
-      </div>
+      </AuthContext.Provider>
     </Aux>
 
   );
 
 }
 
-export default withClass(App,styles.App);
+export default withClass(App, styles.App);

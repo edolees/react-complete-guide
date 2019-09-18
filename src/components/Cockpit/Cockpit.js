@@ -1,13 +1,22 @@
-import React ,{useEffect} from 'react'
+import React, { useEffect, useRef, useContext } from 'react';
 import styles from './Cockpit.module.css'
+import AuthContext from '../../context/auth-context';
 
 const Cockpit = props => {
-    useEffect(()=>{
-         setTimeout(()=>{
+
+    const autoClick = useRef();
+    const authContext = useContext(AuthContext);
+
+    console.log(authContext.authenticated);
+
+    useEffect(() => {
+        /* setTimeout(()=>{
             alert('Saved data')
         },);
         return () =>{console.log('Cockpit.js Cleanup work in useEffect');
-        }
+        }*/
+        autoClick.current.click();
+
     }, []);
 
     let assignedClasses = [];
@@ -27,10 +36,17 @@ const Cockpit = props => {
         <div className={styles.Cockpit}>
             <h1>{props.title}</h1>
             <button
+                ref={autoClick}
                 className={btnClass}
                 onClick={props.toggle}>
                 Toggle Person
-              </button>
+            </button>
+
+            <button
+                onClick={authContext.login}>
+                Login
+            </button>
+
             <p className={assignedClasses.join(' ')}>Hey , This is working!</p>
         </div>
     );
